@@ -1,0 +1,38 @@
+.admin-app {
+    $color-default: #004f83;
+    $sidebar-max-width: 260px;
+    $sidbar-shrink: 78px;
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .sidebar {
+        width: $sidebar-max-width;
+        z-index: 99;
+        background-color: $color-default;
+        transition: all .5s ease;
+
+        .icon {
+            width: 40px;
+        }
+
+        .link {
+            border-radius: 6px;
+
+            &:hover,
+            &.active {
+                background-color: #fff;
+
+                .icon,
+                .link-name {
+                    color: $color-default !important; // Assuming $color-default is defined
+                }
+            }
+        }
+    }
+
+    .section-content {
+        margin-left: $sidebar-max-width;
+    }
+}
