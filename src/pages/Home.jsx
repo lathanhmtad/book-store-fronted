@@ -9,11 +9,11 @@ const Home = () => {
             <div className="container">
                 <div className="row">
                     <div className="col-3">
-                        <h2 className="mb-3">Categories</h2>
+                        <h2 className="mb-3 fs-3">Danh mục sản phẩm</h2>
                         <Categories />
                     </div>
                     <div className="col-9">
-                        <h2 className="mb-3">Products</h2>
+                        <h2 className="mb-3 fs-3">Tất cả sản phẩm</h2>
                         <div className="row row-gap-4">
                             <Product />
                             <Product />

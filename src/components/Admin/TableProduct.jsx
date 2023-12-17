@@ -1,4 +1,19 @@
+import { useState } from 'react'
+import {fetchAllProducts} from '../../services/productService'
+import { useEffect } from 'react'
+
 const TableProduct = () => {
+    const [products, setProducts] = useState([])
+
+    useEffect(() => {
+        getAllProducts()
+    })
+
+    const getAllProducts = async () => {
+        const res = await fetchAllProducts()
+        setProducts(res)
+    }
+
     return (
         <div>
             <table class="table table-hover table-bordered">
