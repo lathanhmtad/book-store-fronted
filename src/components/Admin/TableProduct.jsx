@@ -2,57 +2,54 @@ import { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid';
 import { fetchAllProducts } from '../../services/productService'
 import { useEffect } from 'react'
+import { MdOutlineDelete } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
 
 const TableProduct = () => {
     const [products, setProducts] = useState([])
 
     useEffect(() => {
         getAllProducts()
-    })
+    }, [])
 
     const getAllProducts = async () => {
         const res = await fetchAllProducts()
         setProducts(res)
     }
 
+    const handleDelete = (id) => {
+        console.log('Delete product with ID:', id)
+    };
+
+    const handleEdit = (id) => {
+        console.log('Edit product with ID:', id)
+    };
+
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'firstName', headerName: 'First name', width: 130 },
-        { field: 'lastName', headerName: 'Last name', width: 130 },
+        { field: 'id', headerName: 'ID', width: 50 },
+        { field: 'name', headerName: 'Name', width: 240 },
+        { field: 'author', headerName: 'Author', width: 200 },
+        { field: 'category.name', headerName: 'Category', width: 170, valueGetter: (params) => params.row.category.name },
+        { field: 'image', headerName: 'Image', width: 180 },
+        { field: 'price', headerName: 'Price', width: 130 },
         {
-            field: 'age',
-            headerName: 'Age',
-            type: 'number',
-            width: 90,
+            field: 'action',
+            headerName: 'Action',
+            width: 130,
+            renderCell: (params) => (
+                <div>
+                    <MdOutlineDelete className='fs-4 text-danger' onClick={() => handleDelete(params.row.id)} style={{ cursor: 'pointer', marginRight: '8px' }} />
+                    <FaRegEdit className='fs-4 text-primary' onClick={() => handleEdit(params.row.id)} style={{ cursor: 'pointer' }} />
+                </div>
+            ),
         },
-        {
-            field: 'fullName',
-            headerName: 'Full name',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 160,
-            valueGetter: (params) =>
-                `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-        },
-    ];
-
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
     ];
 
     return (
         <div style={{ height: 400, width: '100%' }}>
             <DataGrid
-                rows={rows}
+                rows={products}
                 columns={columns}
                 initialState={{
                     pagination: {
@@ -60,7 +57,6 @@ const TableProduct = () => {
                     },
                 }}
                 pageSizeOptions={[5, 10]}
-                checkboxSelection
             />
         </div>
     )

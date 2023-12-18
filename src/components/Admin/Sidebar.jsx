@@ -8,7 +8,6 @@ const Sidebar = () => {
 
     const menus = [
         { title: 'Dashboard', link: '/admin', icon: <RxDashboard className="icon fs-5 text-white" />, },
-        { title: 'Users', link: '/admin/users', icon: <PiUsersThree className="icon fs-5 text-white" />, },
         { title: 'Products', link: '/admin/products', icon: <RiProductHuntLine className="icon fs-5 text-white" />, }
     ]
 

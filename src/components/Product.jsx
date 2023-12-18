@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom"
 
-const Product = () => {
+const Product = (props) => {
+    const product = props.product
+
+    const {id, name, description, image} = product
+
     return (
         <div className="col-4">
             <div className="card" style={{ width: "18rem" }}>

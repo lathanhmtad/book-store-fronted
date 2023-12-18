@@ -9,9 +9,9 @@ import Admin from './app/Admin'
 // import pages
 import Home from './pages/Home'
 import ProductDetail from './pages/ProductDetail'
-import Users from './pages/admin/Users'
 import Products from './pages/admin/Products';
 import Dashboard from './pages/admin/Dashboard'
+import PageNotFound from './pages/PageNotFound'
 
 // import css
 import './css/Common.scss'
@@ -32,9 +32,10 @@ root.render(
 
         <Route path='/admin' element={<Admin />}>
           <Route index element={<Dashboard />} />
-          <Route path='users' element={<Users />} />
           <Route path='products' element={<Products />} />
         </Route>
+
+        <Route path='*' element={<PageNotFound />}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
