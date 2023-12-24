@@ -3,9 +3,14 @@ import { Link } from "react-router-dom"
 import { FaBook } from "react-icons/fa";
 import { useEffect } from "react";
 import { IoCartOutline } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsOpenSidebarCart } from "../redux/slices/cartSlice";
 
 const Navbar = () => {
     const [isActive, setIsActive] = useState(false)
+    const dispatch = useDispatch()
+
+    const itemAmount = useSelector(state => state.cart.itemAmount)
 
     useEffect(() => {
         window.addEventListener('scroll', () => {
@@ -27,11 +32,10 @@ const Navbar = () => {
                 </div>
 
                 {/* cart */}
-                <div onClick={() => { console.log('show cart') }} className='cursor-pointer d-flex position-relative'>
+                <div onClick={() => dispatch(setIsOpenSidebarCart(true))} className='cursor-pointer d-flex position-relative'>
                     <IoCartOutline className='fs-3' />
                     <div className='cart-item-amount bg-danger position-absolute fs-6 text-white d-flex justify-content-center align-items-center'>
-                        {/* {itemAmount} */}
-                        5
+                        {itemAmount}
                     </div>
                 </div>
             </div>
