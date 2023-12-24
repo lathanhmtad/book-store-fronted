@@ -8,6 +8,8 @@ import ProductDetail from './pages/ProductDetail'
 import Products from './pages/admin/Products';
 import Dashboard from './pages/admin/Dashboard'
 import PageNotFound from './pages/PageNotFound'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 // import css
 import './css/Common.scss'
@@ -25,6 +27,8 @@ const App = () => {
                 <Route path='/' element={<Customer />}>
                     <Route index element={<Home />} />
                     <Route path='product/:id' element={<ProductDetail />} />
+                    <Route path='login' element={<Login />} />
+                    <Route path='register' element={<Register />} />
                 </Route>
 
                 <Route path='/admin' element={<Admin />}>

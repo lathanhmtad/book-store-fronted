@@ -8,12 +8,45 @@
             --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
             box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
         }
+
+        .cart-item-amount {
+            right: -12px;
+            bottom: 12px;
+            width: 18px;
+            height: 18px;
+            border-radius: 9999px;
+            padding: 12px;
+        }
     }
 
     section.hero {
         height: 100vh;
 
         .banner {
+            width: 100%;
+        }
+    }
+
+    .list-group {
+        li {
+            &:hover {
+                background-color: #6f42c1;
+                transition: all 0.1s linear;
+                color: #fff;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .login-container {
+        height: 100vh;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .product-details-container {
+        height: 100vh;
+        img {
             width: 100%;
         }
     }

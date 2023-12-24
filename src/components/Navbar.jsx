@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom"
 import { FaBook } from "react-icons/fa";
 import { useEffect } from "react";
-// import { BsBag } from 'react-icons/bs'
+import { IoCartOutline } from "react-icons/io5";
 
 const Navbar = () => {
     const [isActive, setIsActive] = useState(false)
@@ -21,9 +21,18 @@ const Navbar = () => {
                     <span className="fs-3 fw-medium">BookStore</span>
                 </Link>
 
-                <div className="d-flex align-items-center gap-3">
-                    <button type="button" className="btn btn-outline-primary">Register</button>
-                    <button type="button" className="btn btn-success">Login</button>
+                <div className="d-flex align-items-center gap-3 d-none">
+                    <Link to='register' className="btn btn-outline-primary">Register</Link>
+                    <Link to='login' className="btn btn-success">Login</Link>
+                </div>
+
+                {/* cart */}
+                <div onClick={() => { console.log('show cart') }} className='cursor-pointer d-flex position-relative'>
+                    <IoCartOutline className='fs-3' />
+                    <div className='cart-item-amount bg-danger position-absolute fs-6 text-white d-flex justify-content-center align-items-center'>
+                        {/* {itemAmount} */}
+                        5
+                    </div>
                 </div>
             </div>
         </nav>

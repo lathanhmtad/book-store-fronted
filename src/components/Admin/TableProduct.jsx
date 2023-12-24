@@ -1,8 +1,9 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { fetchProducts } from '../../redux/slices/productSlice'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { MdOutlineDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
+import formattedPrice from '../../utils/formatPrice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const TableProduct = (props) => {
@@ -33,12 +34,7 @@ const TableProduct = (props) => {
         {
             field: 'price', headerName: 'Price', width: 130,
             valueFormatter: (params) => {
-                const formattedPrice = new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND',
-                }).format(params.value)
-
-                return formattedPrice;
+                return formattedPrice(params.value);
             },
         },
         {

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { fetchAllProducts } from '../../services/productService'
+import { fetchAllProducts, productsPagination, fetchBooksByCategoryId } from '../../services/productService'
 
 export const fetchProducts = createAsyncThunk(
     'product/fetchProducts',
@@ -9,8 +9,26 @@ export const fetchProducts = createAsyncThunk(
     }
 )
 
+export const fetchProductsWithPagination = createAsyncThunk(
+    'product/fetchProductsWithPagination',
+    async (payload) => {
+        const res = await productsPagination(payload.page, payload.limit)
+        return res
+    }
+)
+
+export const fetchBooksByIdCategory = createAsyncThunk(
+    'product/fetchBooksByCategoryId',
+    async (id) => {
+        const res = await fetchBooksByCategoryId(id)
+        return res
+    }
+)
+
 const initialState = {
-    products: []
+    data: {},
+    products: [],
+    size: 0
 }
 
 export const productSlice = createSlice({
@@ -23,6 +41,14 @@ export const productSlice = createSlice({
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchProducts.fulfilled, (state, action) => {
             state.products = action.payload
+        })
+        builder.addCase(fetchBooksByIdCategory.fulfilled, (state, action) => {
+            state.products = action.payload
+            state.size = null
+        })
+        builder.addCase(fetchProductsWithPagination.fulfilled, (state, action) => {
+            state.products = action.payload.book
+            state.size = action.payload.size
         })
     },
 })
