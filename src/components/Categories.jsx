@@ -1,22 +1,19 @@
 import { useEffect } from "react"
 import { useState } from "react"
 import { fetchAllCategories } from '../services/categoryService'
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { fetchBooksByIdCategory, fetchProducts, fetchProductsWithPagination } from "../redux/slices/productSlice"
+import { fetchCategories } from "../redux/slices/categorySlice"
 
 const Categories = (props) => {
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-    const [categories, setCategories] = useState([])
+    const categories = useSelector(state => state.category.categories)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        getAllCategories()
+        dispatch(fetchCategories())
     }, [])
 
-    const getAllCategories = async () => {
-        const res = await fetchAllCategories()
-        setCategories(res)
-    }
 
     const findBooksByCategory = async (id) => {
         if (id) {

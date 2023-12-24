@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getProductById } from "../services/productService"
+import formattedPrice from '../utils/formatPrice'
+import { useSelector } from "react-redux"
 
 const ProductDetail = () => {
     const [product, setProduct] = useState({})
 
+    const categories = useSelector(state => state.category.categories)
+
     const { id } = useParams()
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         findProductById()
     }, [])
 
@@ -16,9 +21,9 @@ const ProductDetail = () => {
         setProduct(res)
     }
 
-    const { id: idP, name, description, price, amount, author, categoryId, image } = product
+    const { name, description, price, amount, author, categoryId, image } = product
 
-    console.log(product)
+    const category = categories.find(category => category.id === categoryId)
 
     return (
         <div className="product-details-container d-flex align-items-center">
@@ -27,13 +32,17 @@ const ProductDetail = () => {
                     <div className="col-5">
                         <img src={image} alt="image" />
                     </div>
-                    <div className="col-7">
+                    <div className="col-1"></div>
+                    <div className="col-6">
                         {/* text */}
-                        <div className='flex-1 text-center lg:text-left'>
-                            <h1 className='text-[26px] font-medium mb-2 max-w-[450px] mx-auto'>{name}</h1>
-                            <div className='text-xl text-red-500 font-medium mb-6'>$ {price}</div>
-                            <p className='mb-8'>{description}</p>
-                            <button onClick={() => { console.log('add to cart') }} className='bg-primary py-4 px-8 text-white'>Add to cart</button>
+                        <div className='text-left'>
+                            <h1 className='fs-1 mb-3 fw-semibold'>{name}</h1>
+                            <div className="fs-4"><span className="fw-medium">Author:</span> {author}</div>
+                            <div className='fs-5 mt-3'><span className="fw-medium">Thể loại: </span> {category?.name}</div>
+                            <div className='fs-5 mt-3'><span className="fw-medium">Description: </span> {description}</div>
+                            <div className='fs-5 mt-3'><span className="fw-medium">Price: </span> {formattedPrice(price)} </div>
+                            <div className='fs-5 mt-3'><span className="fw-medium">Amount: </span> {amount} </div>
+                            <button onClick={() => { console.log('add to cart') }} className='btn btn-primary mt-3'>Add to cart</button>
                         </div>
                     </div>
                 </div>
