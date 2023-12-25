@@ -14,6 +14,8 @@ const Navbar = () => {
     const [isActive, setIsActive] = useState(false)
     const dispatch = useDispatch()
 
+    const cartItems = useSelector(state => state.cart.cartItems)
+
     const user = useSelector(state => state.user.user)
 
 
@@ -50,7 +52,7 @@ const Navbar = () => {
                             <div onClick={() => dispatch(setIsOpenSidebarCart(true))} className='cursor-pointer d-flex position-relative'>
                                 <IoCartOutline className='fs-3' />
                                 <div className='cart-item-amount bg-danger position-absolute fs-6 text-white d-flex justify-content-center align-items-center'>
-                                    {itemAmount}
+                                    {cartItems.length}
                                 </div>
                             </div>
                             <button onClick={handleLogout} className="btn btn-outline-success d-flex align-items-center gap-1 ms-2">Logout <IoIosLogOut /></button>

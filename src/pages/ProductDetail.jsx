@@ -2,10 +2,16 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getProductById } from "../services/productService"
 import formattedPrice from '../utils/formatPrice'
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import _ from 'lodash'
+import { toast } from "react-toastify"
+import { addToCart } from "../redux/slices/cartSlice"
 
 const ProductDetail = () => {
     const [product, setProduct] = useState({})
+
+    const user = useSelector(state => state.user.user)
+    const dispatch = useDispatch()
 
     const categories = useSelector(state => state.category.categories)
 
@@ -25,6 +31,16 @@ const ProductDetail = () => {
 
     const category = categories.find(category => category.id === categoryId)
 
+    const handleAddToCart = () => {
+        if (!_.isEmpty(user)) {
+            dispatch(addToCart(product))
+            toast.success('Đã thêm sản phẩm vào giỏ hàng')
+        }
+        else {
+            toast.warning('Vui lòng đăng nhập để sử dụng tính năng!')
+        }
+    }
+
     return (
         <div className="product-details-container d-flex align-items-center">
             <div className="container">
@@ -42,7 +58,7 @@ const ProductDetail = () => {
                             <div className='fs-5 mt-3'><span className="fw-medium">Description: </span> {description}</div>
                             <div className='fs-5 mt-3'><span className="fw-medium">Price: </span> {formattedPrice(price)} </div>
                             <div className='fs-5 mt-3'><span className="fw-medium">Amount: </span> {amount} </div>
-                            <button onClick={() => { console.log('add to cart') }} className='btn btn-primary mt-3'>Add to cart</button>
+                            <button onClick={handleAddToCart} className='btn btn-primary mt-3'>Add to cart</button>
                         </div>
                     </div>
                 </div>
