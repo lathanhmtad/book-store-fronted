@@ -5,10 +5,17 @@ import { useEffect } from "react";
 import { IoCartOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsOpenSidebarCart } from "../redux/slices/cartSlice";
+import { IoIosLogOut } from "react-icons/io";
+import _ from 'lodash'
+import { logoutUser } from "../redux/slices/userSlice";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
     const [isActive, setIsActive] = useState(false)
     const dispatch = useDispatch()
+
+    const user = useSelector(state => state.user.user)
+
 
     const itemAmount = useSelector(state => state.cart.itemAmount)
 
@@ -18,6 +25,12 @@ const Navbar = () => {
         })
     })
 
+    const handleLogout = () => {
+        dispatch(logoutUser())
+        toast.success('Logout thành công!')
+    }
+
+
     return (
         <nav className={`navbar ${isActive ? 'active py-3' : 'bg-transparent py-4'} position-fixed end-0 start-0 transition-all`}>
             <div className="container">
@@ -26,18 +39,26 @@ const Navbar = () => {
                     <span className="fs-3 fw-medium">BookStore</span>
                 </Link>
 
-                <div className="d-flex align-items-center gap-3 d-none">
-                    <Link to='register' className="btn btn-outline-primary">Register</Link>
-                    <Link to='login' className="btn btn-success">Login</Link>
-                </div>
-
-                {/* cart */}
-                <div onClick={() => dispatch(setIsOpenSidebarCart(true))} className='cursor-pointer d-flex position-relative'>
-                    <IoCartOutline className='fs-3' />
-                    <div className='cart-item-amount bg-danger position-absolute fs-6 text-white d-flex justify-content-center align-items-center'>
-                        {itemAmount}
+                {
+                    _.isEmpty(user) ? <div className="d-flex align-items-center gap-3">
+                        <Link to='register' className="btn btn-outline-primary">Register</Link>
+                        <Link to='login' className="btn btn-success">Login</Link>
                     </div>
-                </div>
+
+                        : <div className="d-flex align-items-center gap-4">
+                            <div>Xin chào: <span className="fw-medium">{user.username}</span></div>
+                            <div onClick={() => dispatch(setIsOpenSidebarCart(true))} className='cursor-pointer d-flex position-relative'>
+                                <IoCartOutline className='fs-3' />
+                                <div className='cart-item-amount bg-danger position-absolute fs-6 text-white d-flex justify-content-center align-items-center'>
+                                    {itemAmount}
+                                </div>
+                            </div>
+                            <button onClick={handleLogout} className="btn btn-outline-success d-flex align-items-center gap-1 ms-2">Logout <IoIosLogOut /></button>
+                        </div>
+                }
+
+
+
             </div>
         </nav>
     )

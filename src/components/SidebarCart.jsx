@@ -19,8 +19,8 @@ const SidebarCart = () => {
                 </div>
             </div>
             <div className="cart-item-container d-flex flex-column border-bottom">
-                {/* <CartItem />
                 <CartItem />
+                {/* <CartItem />
                 <CartItem />
                 <CartItem /> */}
             </div>

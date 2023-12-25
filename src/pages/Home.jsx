@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchProductsWithPagination } from '../redux/slices/productSlice'
 import ReactPaginate from "react-paginate"
-import _ from 'lodash'
 
 const Home = () => {
     const LIMIT = 6
@@ -13,7 +12,6 @@ const Home = () => {
     const products = useSelector(state => state.product.products)
     const [currentPage, setCurrentPage] = useState(1)
     const size = useSelector(state => state.product.size)
-
 
     useEffect(() => {
         dispatch(fetchProductsWithPagination({ page: 1, limit: LIMIT }))
