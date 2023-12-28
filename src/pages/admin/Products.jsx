@@ -1,10 +1,10 @@
 import { FaPlusCircle } from "react-icons/fa";
-import TableProduct from "../../components/Admin/TableProduct";
-import ModalProduct from '../../components/Admin/ModalProduct'
+import TableProduct from "../../components/Admin/Tables/TableProduct";
+import ModalProduct from '../../components/Admin/Modals/ModalProduct'
 const Products = () => {
     return (
         <div className="container">
-            <div className="py-5">
+            <div className="py-4">
                 <div className="d-flex align-items-center justify-content-between">
                     <div>
                         <h3 className="fs-1 fw-semibold">Books</h3>

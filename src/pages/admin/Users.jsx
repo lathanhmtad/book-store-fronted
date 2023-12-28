@@ -1,8 +1,8 @@
 import { FaPlusCircle } from "react-icons/fa";
-import TableUser from "../../components/Admin/TableUser";
+import TableUser from "../../components/Admin/Tables/TableUser";
 import { Button } from "react-bootstrap";
 import { useState } from "react";
-import ModalUser from "../../components/Admin/ModalUser"; 
+import ModalUser from "../../components/Admin/Modals/ModalUser"; 
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
@@ -14,7 +14,7 @@ const Users = () => {
 
     return (
         <div className="container">
-            <div className="py-5">
+            <div className="py-4">
                 <div className="d-flex align-items-center justify-content-between">
                     <div>
                         <h3 className="fs-1 fw-semibold">Users</h3>
