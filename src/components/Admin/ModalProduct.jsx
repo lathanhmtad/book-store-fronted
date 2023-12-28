@@ -145,12 +145,12 @@ const ModalProduct = (props) => {
                             <textarea className="form-control" id="description" onChange={e => handleChange(e)} value={values.description} rows="3"></textarea>
                         </div>
                     </div>
-                    <div className='col-12'>
+                    {/* <div className='col-12'>
                         <div className="mb-3">
                             <label htmlFor="image" className="form-label">Image Url</label>
                             <input type="text" onChange={e => handleChange(e)} value={values.image} className="form-control" id="image" placeholder="" />
                         </div>
-                    </div>
+                    </div> */}
                     <div className='col-12'>
                         <div className="mb-3">
                             <label htmlFor="image" className="form-label">Image</label>

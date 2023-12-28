@@ -3,7 +3,7 @@ import Categories from "../components/Categories"
 import Product from "../components/Product"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchProductsWithPagination } from '../redux/slices/productSlice'
+import { fetchBookBySearchTerm, fetchProductsWithPagination } from '../redux/slices/productSlice'
 import ReactPaginate from "react-paginate"
 
 const Home = () => {
@@ -12,15 +12,22 @@ const Home = () => {
     const products = useSelector(state => state.product.products)
     const [currentPage, setCurrentPage] = useState(1)
     const size = useSelector(state => state.product.size)
+    const [search, setSearch] = useState('')
 
     useEffect(() => {
         dispatch(fetchProductsWithPagination({ page: 1, limit: LIMIT }))
     }, [])
 
+
     const handlePageClick = (page) => {
         setCurrentPage(page.selected + 1)
         dispatch(fetchProductsWithPagination({ page: +page.selected + 1, limit: LIMIT }))
     }
+
+    const handleSearch = () => {
+        dispatch(fetchBookBySearchTerm(search))
+    }
+
     return (
         <div>
             <Hero />
@@ -35,10 +42,10 @@ const Home = () => {
                     <div className="col-9">
                         <div className="d-flex mb-3 align-items-center justify-content-between">
                             <h2 className="fs-3">Tất cả sản phẩm</h2>
-                            <form className="d-flex" role="search">
-                                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                                    <button className="btn btn-outline-success" type="submit">Search</button>
-                            </form>
+                            <div className="d-flex">
+                                <input value={search} onChange={e => setSearch(e.target.value)} className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                                <button onClick={handleSearch} className="btn btn-outline-success" type="submit">Search</button>
+                            </div>
                         </div>
                         <div className="row row-gap-4">
                             {products.map(product => <Product key={product.id} product={product} />)}

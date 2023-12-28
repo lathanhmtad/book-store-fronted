@@ -15,7 +15,7 @@ const Sidebar = () => {
         <div className="sidebar position-fixed top-0 start-0 bottom-0 py-2 px-3">
             <div className="logo-details d-flex align-items-center py-3 position-relative">
                 <FaAudible className="icon fs-5 text-white" />
-                <div className="text-white fs-4 fw-medium">Code Effect</div>
+                <div className="text-white fs-4 fw-medium">BookStore</div>
             </div>
             <ul className="nav-list ps-0 mt-3 mb-0 list-style-none">
                 {menus.map((item, index) => (

@@ -8,13 +8,13 @@ const Hero = () => {
                     <div className="col-md-6 col-12">
                         <div className='d-flex flex-column align-items-center d-md-block'>
                             <div className="fs-4 fw-medium mb-2 text-center text-md-start">
-                                Change your bussines is more better
+                                Sách của bạn
                             </div>
                             <div className="fs-1 mb-2 fw-semibold text-center text-md-start">
-                                Lorem ipsum dolor, sit amet.
+                                Tận hưởng những quyển book của bạn
                             </div>
                             <div className="fs-6 mb-3">
-                                Change your bussines is more better
+                                Khám phá ngay
                             </div>
                             <div>
                                 <button className="btn btn-primary btn-lg fw-medium">Explore now</button>

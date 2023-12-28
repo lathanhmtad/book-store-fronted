@@ -21,13 +21,12 @@ const Login = () => {
         const res = await login(email, password)
         if (!_.isEmpty(res)) {
             dispatch(loginSuccess(res))
-            toast.success('Login thành công!')
+            toast.success('Đăng nhập thành công!')
             navigate('/')
         }
         else {
-            toast.error('Info login không correct!')
+            toast.error('Thông tin đăng nhập không chính xác!')
         }
-
     }
 
     return (

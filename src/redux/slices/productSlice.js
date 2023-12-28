@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { fetchAllProducts, productsPagination, fetchBooksByCategoryId } from '../../services/productService'
+import { fetchAllProducts, productsPagination, fetchBooksByCategoryId, searchBooks } from '../../services/productService'
 
 export const fetchProducts = createAsyncThunk(
     'product/fetchProducts',
@@ -21,6 +21,14 @@ export const fetchBooksByIdCategory = createAsyncThunk(
     'product/fetchBooksByCategoryId',
     async (id) => {
         const res = await fetchBooksByCategoryId(id)
+        return res
+    }
+)
+
+export const fetchBookBySearchTerm = createAsyncThunk(
+    'product/fetchBookBySearchTerm',
+    async (search) => {
+        const res = await searchBooks(search)
         return res
     }
 )
@@ -49,6 +57,10 @@ export const productSlice = createSlice({
         builder.addCase(fetchProductsWithPagination.fulfilled, (state, action) => {
             state.products = action.payload.book
             state.size = action.payload.size
+        })
+        builder.addCase(fetchBookBySearchTerm.fulfilled, (state, action) => {
+            state.products = action.payload
+            state.size = null
         })
     },
 })

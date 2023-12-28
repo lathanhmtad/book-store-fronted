@@ -27,3 +27,7 @@ export const fetchBooksByCategoryId = (id) => {
 export const getProductById = id => {
     return axios.get(`book-detail/${id}`)
 }
+
+export const searchBooks = data => {
+    return axios.get(`/search?keyword=${data}`)
+}
