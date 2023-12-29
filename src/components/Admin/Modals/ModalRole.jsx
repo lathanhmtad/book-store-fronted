@@ -67,7 +67,7 @@ const ModalRole = (props) => {
                                 <div class="form-floating mb-3">
                                     <input type="text" value={roleForm.description} onChange={e => handleOnChangeInput('description', e.target.value, key)}
                                         class="form-control" id="description" placeholder="" autoComplete='off' />
-                                    <label htmlFor="description">Short description</label>
+                                    <label htmlFor="description">Description</label>
                                 </div>
                             </div>
                             <div className='col-1 ps-0'>
