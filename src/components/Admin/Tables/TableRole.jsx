@@ -1,67 +1,44 @@
-import ReactPaginate from "react-paginate"
-const TableRole = () => {
+import { useEffect } from "react"
+import { FaRegEdit } from "react-icons/fa";
+import { CiTrash } from "react-icons/ci";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchRoles } from '../../../redux/slices/roleSlice'
+import { ROLES_MAX_ITEMS_PER_PAGE } from '../../../utils/appConstant'
 
-    const handlePageClick = (event) => {
-        console.log(event)
-    }
+const TableRole = (props) => {
+    const dispatch = useDispatch()
+    const data = useSelector(state => state.role.data)
+
+    useEffect(() => {
+        dispatch(fetchRoles({ page: props.currentPage, limit: ROLES_MAX_ITEMS_PER_PAGE }))
+    }, [props.currentPage])
 
     return (
         <div>
-            <table class="table table-hover table-bordered">
+            <table className="table table-hover table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col" style={{ textAlign: "center" }}>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
+                    {data.map(item => (
+                        <tr key={item.id}>
+                            <td>{item.id}</td>
+                            <td>{item.name}</td>
+                            <td>{item.description}</td>
+                            <td className="text-center">
+                                <FaRegEdit onClick={() => props.handleOpenModalUpdate(item)} className="text-primary fs-5 cursor-pointer" />
+                                <span className="mx-2"></span>
+                                <CiTrash onClick={() => props.handleOpenModalDelete(item.id)} className="text-danger cursor-pointer fs-5" />
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
-
-            <div className="d-flex justify-content-between align-items-center mt-5">
-                <p>Row per pages</p>
-
-
-                <ReactPaginate
-                    nextLabel="next >"
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
-                    marginPagesDisplayed={2}
-                    pageCount={10}
-                    previousLabel="< previous"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    containerClassName="pagination"
-                    activeClassName="active"
-                    renderOnZeroPageCount={null}
-                />
-            </div>
         </div>
     )
 }

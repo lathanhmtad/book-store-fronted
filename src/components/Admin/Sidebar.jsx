@@ -1,17 +1,19 @@
 import { NavLink } from "react-router-dom";
-import { FaAudible, FaBars } from "react-icons/fa";
+import { FaAudible } from "react-icons/fa";
 import { RxDashboard } from "react-icons/rx";
 import { PiUsersThree } from "react-icons/pi";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { RiProductHuntLine } from "react-icons/ri";
+import { GrResources } from "react-icons/gr";
 import { AiOutlineFileProtect } from "react-icons/ai";
 
 const Sidebar = () => {
 
     const menus = [
         { title: 'Dashboard', link: '/admin', icon: <RxDashboard className="icon fs-5 text-white" />, },
+        { title: 'Resources system', link: '/resources', icon: <GrResources className="icon fs-5 text-white" />, },
         { title: 'Roles', link: '/admin/roles', icon: <MdOutlineAdminPanelSettings className="icon fs-5 text-white" />, },
-        { title: 'Authorities', link: '/admin/authorities', icon: <AiOutlineFileProtect className="icon fs-5 text-white" />, },
+        { title: 'Privileges', link: '/admin/privileges', icon: <AiOutlineFileProtect className="icon fs-5 text-white" />, },
         { title: 'Users', link: '/admin/users', icon: <PiUsersThree className="icon fs-5 text-white" />, },
         { title: 'Products', link: '/admin/products', icon: <RiProductHuntLine className="icon fs-5 text-white" />, }
     ]

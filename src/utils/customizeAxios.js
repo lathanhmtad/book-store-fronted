@@ -1,10 +1,13 @@
+import axios from "axios";
+
 const instance = axios.create({
-    baseURL: 'https://api.example.com'
+    baseURL: 'http://localhost:8080'
 });
 
+instance.defaults.headers.common = { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
 
 // Add a request interceptor
-axios.interceptors.request.use(function (config) {
+instance.interceptors.request.use(function (config) {
     // Do something before request is sent
     return config;
 }, function (error) {
@@ -13,12 +16,14 @@ axios.interceptors.request.use(function (config) {
 });
 
 // Add a response interceptor
-axios.interceptors.response.use(function (response) {
+instance.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response;
+    return response.data;
 }, function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return Promise.reject(error);
+    return error.response?.data;
 });
+
+export default instance

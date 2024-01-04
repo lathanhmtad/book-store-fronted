@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FaBook } from "react-icons/fa";
 import { useEffect } from "react";
 // import { BsBag } from 'react-icons/bs'
@@ -13,6 +13,8 @@ const Navbar = () => {
         })
     })
 
+    const navigate = useNavigate()
+
     return (
         <nav className={`navbar ${isActive ? 'active py-3' : 'bg-transparent py-4'} position-fixed end-0 start-0 transition-all`}>
             <div className="container">
@@ -22,8 +24,8 @@ const Navbar = () => {
                 </Link>
 
                 <div className="d-flex align-items-center gap-3">
-                    <button type="button" className="btn btn-outline-primary">Register</button>
-                    <button type="button" className="btn btn-success">Login</button>
+                    <button onClick={() => navigate('/register')} type="button" className="btn btn-outline-primary">Register</button>
+                    <button onClick={() => navigate('/login')} type="button" className="btn btn-success">Login</button>
                 </div>
             </div>
         </nav>
