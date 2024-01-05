@@ -4,7 +4,7 @@ import roleService from '../../services/roleService'
 export const fetchRoles = createAsyncThunk(
     'roles/fetchRoles',
     async (payload) => {
-        const response = await roleService.getRoles(payload.page, payload.limit)
+        const response = await roleService.getRolesWithPagination(payload.page, payload.limit)
         return response
     }
 )

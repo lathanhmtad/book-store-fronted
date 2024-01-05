@@ -13,9 +13,17 @@ const TableRole = (props) => {
         dispatch(fetchRoles({ page: props.currentPage, limit: ROLES_MAX_ITEMS_PER_PAGE }))
     }, [props.currentPage])
 
+    console.log(data)
+
     return (
         <div>
-            <table className="table table-hover table-bordered">
+
+
+
+
+
+            
+            {/* <table className="table table-hover table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">id</th>
@@ -25,7 +33,7 @@ const TableRole = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map(item => (
+                    {data?.map(item => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
@@ -38,7 +46,7 @@ const TableRole = (props) => {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table> */}
         </div>
     )
 }

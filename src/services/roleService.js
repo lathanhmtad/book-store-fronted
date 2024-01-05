@@ -1,8 +1,12 @@
 import axios from '../utils/customizeAxios'
 
 class RoleService {
-    getRoles(page, limit) {
+    getRolesWithPagination(page, limit) {
         return axios.get(`/api/v1/roles?page=${page}&limit=${limit}`)
+    }
+
+    getRoles() {
+        return axios.get('api/v1/roles/all')
     }
 
     addRoles(roles) {

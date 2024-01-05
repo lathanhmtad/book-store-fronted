@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import '../css/Auth.scss'
-import { login } from '../services/userService';
+import userService from '../services/userService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash'
-import Alert from 'react-bootstrap/Alert';
 
 const Login = () => {
     const [email, setEmail] = useState("")
@@ -13,7 +12,7 @@ const Login = () => {
 
     const handleLogin = async () => {
         const id = toast.loading("Please wait...")
-        const res = await login(email, password)
+        const res = await userService.login(email, password)
         if (res && res.accessToken) {
             toast.update(id, { render: "Đăng nhập thành công", type: "success", isLoading: false, autoClose: 3000, closeButton: true });
             localStorage.setItem('accessToken', res.accessToken)

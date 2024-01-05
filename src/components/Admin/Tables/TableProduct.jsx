@@ -25,7 +25,7 @@ const TableProduct = () => {
                     </tr>
                     <tr>
                         <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
+                        <td colSpan="2">Larry the Bird</td>
                         <td>@twitter</td>
                     </tr>
                 </tbody>
