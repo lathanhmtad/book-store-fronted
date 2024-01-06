@@ -1,6 +1,6 @@
 import { FaPlusCircle } from "react-icons/fa";
-import TableProduct from "../../components/Admin/Tables/TableProduct";
-import ModalProduct from '../../components/Admin/Modals/ModalProduct'
+import TableProduct from "../../components/Admin/Products/TableProduct";
+import ModalProduct from '../../components/Admin/Products/ModalProduct'
 const Products = () => {
     return (
         <div className="container">

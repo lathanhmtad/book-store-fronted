@@ -1,20 +1,21 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
-// import apps
-import Customer from './app/Customer';
-import Admin from './app/Admin'
+// import layouts
+import Customer from './layouts/Customer';
+import Admin from './layouts/Admin'
 
 // import pages
 import Home from './pages/Home'
 import ProductDetail from './pages/ProductDetail'
-import Users from './pages/admin/Users'
-import Products from './pages/admin/Products';
-import Dashboard from './pages/admin/Dashboard'
-import Roles from './pages/admin/Roles'
-import Privileges from './pages/admin/Privileges'
+import Users from './pages/Admin/Users'
+import Products from './pages/Admin/Products';
+import Dashboard from './pages/Admin/Dashboard'
+import Roles from './pages/Admin/Roles'
+import Privileges from './pages/Admin/Privileges'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import PageNotFound from './pages/PageNotFound'
 
 // import css
 import './css/Common.scss'
@@ -70,6 +71,10 @@ const App = () => {
         {
             path: '/register',
             element: <Register />,
+        },
+        {
+            path: '*',
+            element: <PageNotFound />
         }
     ]);
 

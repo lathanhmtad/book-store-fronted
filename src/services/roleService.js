@@ -13,12 +13,18 @@ class RoleService {
         return axios.post('/api/v1/roles', { roles })
     }
 
-    updateRole(dataUpdate) {
-        return axios.put(`/api/v1/roles/${dataUpdate.id}`, dataUpdate)
+    updateRole(id, dataUpdate) {
+        return axios.put(`/api/v1/roles/${id}`, dataUpdate)
     }
 
     deleteRole(id) {
         return axios.delete(`/api/v1/roles/${id}`)
+    }
+
+    deleteAll(ids) {
+        return axios.delete('api/v1/roles', {
+            data: ids
+        })
     }
 }
 

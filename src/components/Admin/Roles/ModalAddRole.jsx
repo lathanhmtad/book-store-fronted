@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+import { Button as ButtonAntd } from 'antd';
+
 import _ from 'lodash'
 
 import { IoMdAddCircleOutline } from "react-icons/io";
@@ -11,13 +13,10 @@ import { CiTrash } from "react-icons/ci";
 import { toast } from 'react-toastify';
 
 import roleService from '../../../services/roleService'
-import { useDispatch } from 'react-redux';
-import { fetchRoles } from '../../../redux/slices/roleSlice';
-import { ROLES_MAX_ITEMS_PER_PAGE } from '../../../utils/appConstant';
 
 const ModalAddRole = (props) => {
+    const [loading, setLoading] = useState(false)
     const { show, setShow, setCurrentPage } = props
-    const dispatch = useDispatch()
 
     const defaultRoleForm = {
         name: '',
@@ -75,18 +74,21 @@ const ModalAddRole = (props) => {
 
         // call api
         if (_.isEmpty(invalidRoleForms)) {
+            setLoading(true)
             const data = buildData()
             const res = await roleService.addRoles(data)
             if (res && !res.errorCode) {
-                toast.success(res.message)
-                dispatch(fetchRoles({ page: 1, limit: ROLES_MAX_ITEMS_PER_PAGE }))
+                toast.success("Create role success")
                 setCurrentPage(1)
+                props.fetchRoles()
                 setShow(false)
                 resetForm()
             } else {
                 toast.error(res.message)
             }
+            setLoading(false)
         }
+
         // handle error
         else {
             let _roleFormItems = _.cloneDeep(roleFormItems)
@@ -116,7 +118,7 @@ const ModalAddRole = (props) => {
             backdrop="static"
             centered
             scrollable={true}
-            size='xl'
+            size='lg'
         >
             <Modal.Header>
                 <Modal.Title>Tạo mới vai trò</Modal.Title>
@@ -151,12 +153,12 @@ const ModalAddRole = (props) => {
 
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseModal}>
+                <ButtonAntd type="default" size='large' loading={loading ? true : false} onClick={handleCloseModal}>
                     Close
-                </Button>
-                <Button variant="primary" onClick={handleSave}>
-                    Save Changes
-                </Button>
+                </ButtonAntd>
+                <ButtonAntd type="primary" size='large' loading={loading ? true : false} onClick={handleSave}>
+                    Save changes
+                </ButtonAntd>
             </Modal.Footer>
         </Modal>
     )
