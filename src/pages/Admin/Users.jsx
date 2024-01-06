@@ -1,8 +1,6 @@
 import { FaPlusCircle } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import { useState } from "react";
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
 
 import TableUser from "../../components/Admin/Users/TableUser";
 import ModalUser from "../../components/Admin/Users/ModalUser";
@@ -14,43 +12,27 @@ const Users = () => {
     const handleShow = () => setShow(true);
 
     return (
-        <div className="container">
-            <div className="py-4">
-                <div className="d-flex align-items-center justify-content-between">
-                    <div>
-                        <h3 className="fs-1 fw-semibold">Users</h3>
-                        <p className="fs-6 fst-normal">User management</p>
-                    </div>
-                    <Button
-                        onClick={handleShow}
-                        variant="primary"
-                        className="d-flex align-items-center gap-2">
-                        <FaPlusCircle />
-                        Add user
-                    </Button>
+        <>
+            <div className="d-flex align-items-center justify-content-between">
+                <div>
+                    <span className="fs-2 fw-semibold">Users</span>
+                    <p className="fs-6 fs-normal">Quản lý người dùng</p>
                 </div>
-                <TableUser />
-                <ModalUser
-                    show={show}
-                    handleClose={handleClose}
-                />
+                <Button
+                    onClick={handleShow}
+                    variant="primary"
+                    className="d-flex align-items-center gap-2">
+                    <FaPlusCircle />
+                    Add user
+                </Button>
             </div>
-            <Tabs
-                defaultActiveKey="profile"
-                id="uncontrolled-tab-example"
-                className="mb-3"
-            >
-                <Tab eventKey="home" title="Home">
-                    Tab content for Home
-                </Tab>
-                <Tab eventKey="profile" title="Profile">
-                    Tab content for Profile
-                </Tab>
-                <Tab eventKey="contact" title="Contact" >
-                    Tab content for Contact
-                </Tab>
-            </Tabs>
-        </div>
+            <TableUser />
+            <ModalUser
+                show={show}
+                handleClose={handleClose}
+            />
+        </>
+
     )
 }
 

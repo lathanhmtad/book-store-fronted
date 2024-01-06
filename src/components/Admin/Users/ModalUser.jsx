@@ -9,12 +9,14 @@ import { Radio } from 'antd';
 import { Checkbox } from 'antd';
 import { Modal as ModalAntd } from 'antd';
 import { toast } from 'react-toastify';
+import { Button as ButtonAntd } from 'antd'
 import userService from '../../../services/userService';
 
 
 const ModalUser = (props) => {
     const { show, handleClose } = props
 
+    const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState('')
     const [fullName, setFullName] = useState('')
     const [password, setPassword] = useState('')
@@ -24,9 +26,11 @@ const ModalUser = (props) => {
     const [enabled, setEnabled] = useState('false')
 
     const [optionRoles, setOptionRoles] = useState([])
+
     useEffect(() => {
         fetchOptionRoles()
     }, [])
+
     const fetchOptionRoles = async () => {
         const res = await roleService.getRoles()
         if (res && !res.errorCode) {
@@ -121,6 +125,7 @@ const ModalUser = (props) => {
     };
 
     const handleSaveChanges = async () => {
+        setLoading(true)
         const formData = new FormData()
         formData.append('email', email)
         formData.append('fullName', fullName)
@@ -129,8 +134,11 @@ const ModalUser = (props) => {
         formData.append('enabled', enabled)
         formData.append('image', photo[0].originFileObj)
         formData.append('roleIds', roles)
-        
+
         const res = await userService.createNewUser(formData)
+        console.log(res)
+
+        setLoading(false)
     }
 
     return (
@@ -185,6 +193,7 @@ const ModalUser = (props) => {
                                     placeholder="Please select"
                                     onChange={handleChangeRoles}
                                     options={optionRoles}
+                                    filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     dropdownStyle={{ zIndex: 1000000000000 }}
                                 />
                             </div>
@@ -249,12 +258,16 @@ const ModalUser = (props) => {
                 </div>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={() => handleClose()}>
+                <ButtonAntd type="default" size='large' loading={loading ? true : false} onClick={() => handleClose()}>
                     Close
-                </Button>
-                <Button variant="primary" onClick={handleSaveChanges}>
+                </ButtonAntd>
+                <ButtonAntd
+                    size='large' type="primary"
+                    onClick={handleSaveChanges}
+                    loading={loading ? true : false}
+                >
                     Save Changes
-                </Button>
+                </ButtonAntd>
             </Modal.Footer>
         </Modal>
     )
