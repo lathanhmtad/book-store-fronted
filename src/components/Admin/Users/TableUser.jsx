@@ -1,67 +1,97 @@
-import ReactPaginate from "react-paginate"
-const TableUser = () => {
+import { Checkbox, Popconfirm, Table, Typography } from "antd";
+import { useState } from "react";
 
-    const handlePageClick = (event) => {
-        console.log(event)
+import userService from '../../../services/userService'
+import { toast } from "react-toastify";
+
+const TableUser = (props) => {
+    const [loading, setLoading] = useState(false)
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+    const rowSelection = {
+        type: 'checkbox',
+        selectedRowKeys,
+        onChange: (newSelectedRowKeys) => {
+            setSelectedRowKeys(newSelectedRowKeys);
+        }
+    };
+
+    const edit = () => {
+
     }
+
+    const handleConfirmDelete = async (id) => {
+        setLoading(true)
+        const res = await userService.deleteUser(id)
+        if (!res.errorCode) {
+            toast.success('Xóa thành công!')
+            props.fetchUsers()
+        }
+        else {
+            toast.error(res.message)
+        }
+        setLoading(false)
+    }
+
+    const columns = [
+        {
+            title: 'Id',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+        },
+        {
+            title: 'Full name',
+            dataIndex: 'fullName',
+        },
+        {
+            title: 'Enabled',
+            dataIndex: 'enabled',
+            render: (value) => (
+                <Checkbox checked={value} ></Checkbox>
+            )
+        },
+        {
+            title: "Action",
+            dataIndex: "operation",
+            render: (_, record) => {
+                return (
+                    <div className="d-flex align-items-center gap-3">
+                        <Typography.Link
+                            onClick={() => props.handleShowModalUserDetails(record.id)}
+                        >
+                            Details
+                        </Typography.Link>
+                        <Typography.Link
+                            type="warning"
+                            onClick={() => edit(record)}
+                        >
+                            Edit
+                        </Typography.Link>
+                        <Typography.Link type="danger">
+                            <Popconfirm
+                                title="Sure to delete?"
+                                onConfirm={() => handleConfirmDelete(record.id)}
+                            >
+                                Delete
+                            </Popconfirm>
+                        </Typography.Link>
+                    </div>
+                )
+            },
+        },
+    ];
+
 
     return (
         <div>
-            <table className="table table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colSpan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div className="d-flex justify-content-between align-items-center mt-5">
-                <p>Row per pages</p>
-
-
-                <ReactPaginate
-                    nextLabel="next >"
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
-                    marginPagesDisplayed={2}
-                    pageCount={10}
-                    previousLabel="< previous"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    containerClassName="pagination"
-                    activeClassName="active"
-                    renderOnZeroPageCount={null}
-                />
-            </div>
+            <Table
+                loading={props.loading || loading ? true : false}
+                rowSelection={rowSelection} columns={columns} rowKey="id"
+                pagination={false} bordered dataSource={props.data}
+            />
         </div>
     )
 }

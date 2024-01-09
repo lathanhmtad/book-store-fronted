@@ -15,6 +15,14 @@ class UserService {
             },
         })
     }
+
+    getUsersWithPagination(page, limit) {
+        return axios.get(`/api/v1/users?page=${page}&limit=${limit}`)
+    }
+
+    deleteUser(id) {
+        return axios.delete(`api/v1/users/${id}`)
+    }
 }
 
 export default new UserService()

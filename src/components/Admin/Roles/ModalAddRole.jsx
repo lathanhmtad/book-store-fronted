@@ -83,8 +83,6 @@ const ModalAddRole = (props) => {
                 props.fetchRoles()
                 setShow(false)
                 resetForm()
-            } else if(res && res.errorCode) {
-                toast.error(res.message)
             }
             else {
                 toast.error('Có lỗi từ server!')

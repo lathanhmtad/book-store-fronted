@@ -1,30 +1,24 @@
 import { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import roleService from '../../../services/roleService'
-import { Select } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { Upload } from 'antd';
-import { Radio } from 'antd';
-import { Checkbox } from 'antd';
-import { Modal as ModalAntd } from 'antd';
-import { toast } from 'react-toastify';
-import { Button as ButtonAntd } from 'antd'
-import userService from '../../../services/userService';
 
+import { UploadOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Form,
+    Input,
+    Radio,
+    Select,
+    Upload,
+} from 'antd';
+
+import roleService from '../../../services/roleService'
+import userService from '../../../services/userService';
+import { toast } from 'react-toastify';
 
 const ModalUser = (props) => {
     const { show, handleClose } = props
 
     const [loading, setLoading] = useState(false)
-    const [email, setEmail] = useState('')
-    const [fullName, setFullName] = useState('')
-    const [password, setPassword] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [roles, setRoles] = useState([])
-    const [photo, setPhoto] = useState([]);
-    const [enabled, setEnabled] = useState('false')
-
     const [optionRoles, setOptionRoles] = useState([])
 
     useEffect(() => {
@@ -42,232 +36,215 @@ const ModalUser = (props) => {
         }
     }
 
-    const statusOptions = [
-        {
-            label: 'Disabled',
-            value: 'false',
-        },
-        {
-            label: 'Enabled',
-            value: 'true',
-        },
-    ];
-
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState("");
-    const [previewTitle, setPreviewTitle] = useState("");
-    const handleCancel = () => setPreviewOpen(false);
-    const handlePreview = async (file) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
-        setPreviewImage(file.url || file.preview);
-        setPreviewOpen(true);
-        setPreviewTitle(
-            file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-        );
-    };
-    const handleChangeImage = ({ file, fileList: newFileList }) => {
-        const isValid = beforeUpload(file)
-        if (isValid) {
-            setPhoto(newFileList)
-        }
-    }
-    const beforeUpload = (file) => {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-            toast.error('You can only upload JPG/PNG file!');
-        }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-            toast.error('Image must smaller than 2MB!');
-        }
-        return isJpgOrPng && isLt2M;
-    }
-    const getBase64 = (file) =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    const uploadButton = (
-        <button
-            style={{
-                border: 0,
-                background: "none",
-            }}
-            type="button"
-        >
-            <PlusOutlined />
-            <div
-                style={{
-                    marginTop: 8,
-                }}
-            >
-                Upload
-            </div>
-        </button>
-    );
-
-    const plainOptions = ['Apple', 'Pear', 'Orange'];
-
-    const handleChangeStatus = ({ target: { value } }) => {
-        setEnabled(value);
-    }
-
-    const handleChangeRoles = (value) => {
-        setRoles(value)
-    };
-
-    const onChange5 = (checkedValues) => {
-        console.log('checked = ', checkedValues);
-    };
-
-    const handleSaveChanges = async () => {
+    const onFinish = async (values) => {
         setLoading(true)
         const formData = new FormData()
-        formData.append('email', email)
-        formData.append('fullName', fullName)
-        formData.append('phoneNumber', phoneNumber)
-        formData.append('password', password)
-        formData.append('enabled', enabled)
-        formData.append('image', photo[0].originFileObj)
-        formData.append('roleIds', roles)
-
+        Object.entries(values).forEach(([key, value]) => {
+            if (key === 'image') {
+                formData.append(key, value[0].originFileObj)
+            }
+            else {
+                formData.append(key, value)
+            }
+        })
         const res = await userService.createNewUser(formData)
-        console.log(res)
+        if (!res.errorCode) {
+            toast.success('Tạo mới người dùng thành công')
+            props.setCurrentPage(1)
+            props.fetchUsers()
+            props.handleClose()
+        }
+        else {
+            toast.error(res.message)
+        }
 
         setLoading(false)
-    }
+    };
+
+    const normFile = (e) => {
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e?.fileList;
+    };
 
     return (
         <Modal
             show={show}
-            onHide={handleClose}
             backdrop="static"
             centered
             size='xl'
         >
             <Modal.Header>
-                <Modal.Title>Add a user</Modal.Title>
+                <Modal.Title>{
+                    props.userDetails.fullName ? `Details for user ${props.userDetails.fullName}` : 'Add a user'
+                }</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className='row'>
-                    <div className='col-8'>
-                        <div className="mb-3 row">
-                            <label htmlFor="email" className="col-sm-2 col-form-label">Email:</label>
-                            <div className="col-sm-10">
-                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="form-control" id="email" />
-                            </div>
-                        </div>
-                        <div className="mb-3 row">
-                            <label htmlFor="fullName" className="col-sm-2 col-form-label">Full name:</label>
-                            <div className="col-sm-10">
-                                <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} className="form-control" id="fullName" />
-                            </div>
-                        </div>
-                        <div className="mb-3 row">
-                            <label htmlFor="password" className="col-sm-2 col-form-label">Password:</label>
-                            <div className="col-sm-10">
-                                <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="form-control" id="password" />
-                            </div>
-                        </div>
-                        <div className="mb-3 row">
-                            <label htmlFor="phoneNumber" className="col-sm-2 col-form-label">Phone:</label>
-                            <div className="col-sm-10">
-                                <input type="text" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} className="form-control" id="phoneNumber" />
-                            </div>
-                        </div>
-                        <div className='mb-3 row'>
-                            <label htmlFor='roles' className="col-sm-2 col-form-label">Roles:</label>
-                            <div className='col-sm-10'>
+                    <div className='col-9'>
+                        <Form
+                            name='basic'
+                            disabled={loading ? true : false}
+                            size='large'
+                            labelCol={{
+                                span: 3,
+                            }}
+                            labelAlign='left'
+                            wrapperCol={{
+                                span: 32,
+                            }}
+                            layout="horizontal"
+                            style={{
+                                width: '100%'
+                            }}
+                            autoComplete="off"
+                            onFinish={onFinish}
+                            validateTrigger={['onChange']}
+                        >
+                            <Form.Item
+                                label="Full name"
+                                name="fullName"
+                                initialValue={props.userDetails.fullName}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your full name!',
+                                    },
+                                    {
+                                        min: 3,
+                                        message: 'Please enter at least 3!'
+                                    }
+                                ]}
+                            >
+                                <Input
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label="Email"
+                                name="email"
+                                initialValue={props.userDetails.email}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your email!',
+                                    },
+                                    {
+                                        type: 'email',
+                                        message: 'Email invalid!'
+                                    }
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="Password"
+                                name="password"
+                                initialValue={props.userDetails.password}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your password!',
+                                    },
+                                    {
+                                        min: 3,
+                                        message: 'Please enter at least 3!'
+                                    }
+                                ]}
+                            >
+                                <Input.Password />
+                            </Form.Item>
+                            <Form.Item
+                                label="Phone"
+                                name="phoneNumber"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your phone number!',
+                                    }
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label="Select roles"
+                                name="roleIds"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please select roles!',
+                                    }
+                                ]}
+                            >
                                 <Select
-                                    id='roles'
-                                    mode="multiple"
-                                    size="large"
                                     allowClear
+                                    mode="multiple"
                                     style={{
                                         width: '100%',
                                     }}
-                                    placeholder="Please select"
-                                    onChange={handleChangeRoles}
+                                    placeholder="Please select roles"
                                     options={optionRoles}
                                     filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     dropdownStyle={{ zIndex: 1000000000000 }}
-                                />
-                            </div>
-                        </div>
-                        <div className="mb-3 row">
-                            <label className="col-sm-2 col-form-label">Image:</label>
-                            <div className="col-sm-10">
+                                ></Select>
+                            </Form.Item>
+                            <Form.Item
+                                label="Image"
+                                name="image"
+                                valuePropName='fileList'
+                                getValueFromEvent={normFile}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please upload your image!'
+                                    }
+                                ]}
+                            >
                                 <Upload
                                     action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                                    listType="picture-card"
-                                    fileList={photo}
-                                    onPreview={handlePreview}
-                                    onChange={handleChangeImage}
+                                    listType="picture"
+                                    maxCount={1}
                                 >
-                                    {photo.length >= 1 ? null : uploadButton}
+                                    <Button icon={<UploadOutlined />}>Upload (Max: 1)</Button>
                                 </Upload>
-                                <ModalAntd
-                                    open={previewOpen}
-                                    title={previewTitle}
-                                    footer={null}
-                                    onCancel={handleCancel}
-                                    zIndex={9999999999999999999}
-                                >
-                                    <img
-                                        alt="example"
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                        src={previewImage}
-                                    />
-                                </ModalAntd>
-                            </div>
-                        </div>
-                        <div className='mb-3 row'>
-                            <label className="col-sm-2 col-form-label">Status:</label>
-                            <div className='col-sm-10'>
-                                <Radio.Group
-                                    options={statusOptions}
-                                    onChange={handleChangeStatus}
-                                    value={enabled}
-                                    optionType="button"
-                                    buttonStyle="solid"
-                                    defaultValue={true}
-                                />
-                            </div>
-                        </div>
-
+                            </Form.Item>
+                            <Form.Item
+                                label="Status"
+                                name="enabled"
+                                initialValue="false"
+                            >
+                                <Radio.Group>
+                                    <Radio value="false">Disabled</Radio>
+                                    <Radio value="true">Enabled</Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                            <Form.Item
+                                wrapperCol={{
+                                    offset: 4,
+                                    span: 16,
+                                }}
+                            >
+                                <Button type="primary"
+                                    loading={loading ? true : false}
+                                    htmlType="submit">
+                                    Submit
+                                </Button>
+                            </Form.Item>
+                        </Form>
                     </div>
-                    <div className='col-4'>
-                        <div>
-                            <label className='form-label'>Permissions:</label>
-                            <div className='mt-3 ms-3'>
-                                <Checkbox.Group
-                                    options={plainOptions}
-                                    defaultValue={['Apple']}
-                                    onChange={onChange5}
-                                    className='d-flex flex-column gap-3'
-                                />
-                            </div>
-                        </div>
+                    <div className='col-3'>
+                        Permissions
                     </div>
                 </div>
             </Modal.Body>
             <Modal.Footer>
-                <ButtonAntd type="default" size='large' loading={loading ? true : false} onClick={() => handleClose()}>
-                    Close
-                </ButtonAntd>
-                <ButtonAntd
-                    size='large' type="primary"
-                    onClick={handleSaveChanges}
+                <Button
+                    type="default"
+                    size='large'
                     loading={loading ? true : false}
+                    onClick={() => handleClose()}
                 >
-                    Save Changes
-                </ButtonAntd>
+                    Close
+                </Button>
             </Modal.Footer>
         </Modal>
     )

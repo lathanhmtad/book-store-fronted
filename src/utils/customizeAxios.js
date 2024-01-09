@@ -4,11 +4,13 @@ const instance = axios.create({
     baseURL: 'http://localhost:8080'
 });
 
-instance.defaults.headers.common = { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
-
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     // Do something before request is sent
+    const accessToken = localStorage.getItem('accessToken')
+    if (accessToken) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
     return config;
 }, function (error) {
     // Do something with request error
@@ -23,7 +25,10 @@ instance.interceptors.response.use(function (response) {
 }, function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return error.response?.data;
+    if (error.response) {
+        return error.response.data
+    }
+    return null
 });
 
 export default instance

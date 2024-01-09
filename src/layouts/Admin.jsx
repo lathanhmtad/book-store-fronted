@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { GrResources } from "react-icons/gr";
 import { MdOutlineAdminPanelSettings } from "react-icons/md"
@@ -6,10 +6,8 @@ import { AiOutlineFileProtect } from 'react-icons/ai'
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    UploadOutlined,
     UserOutlined,
     DashboardOutlined,
-    KeyOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
