@@ -87,7 +87,6 @@ const Login = () => {
                     }}
                 >
                     <Button
-                        disabled={loading ? true : false}
                         loading={loading ? true : false}
                         size='large'
                         type="primary" htmlType="submit">
