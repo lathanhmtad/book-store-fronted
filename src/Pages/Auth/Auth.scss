@@ -1,0 +1,11 @@
+.login-page-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .ant-form-item-label {
+        padding-bottom: 0;
+    }
+}

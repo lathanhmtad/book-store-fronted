@@ -1,37 +1,14 @@
-import { Checkbox, Popconfirm, Table, Typography } from "antd";
-import { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { Button, Checkbox, Space, Table, Typography, Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserById, fetchUserWithPagination } from '../../../redux/slices/users/userThunk';
+import { USERS_MAX_ITEMS_PER_PAGE } from '../../../utils/appConstant';
 
-import userService from '../../../services/userService'
-import { toast } from "react-toastify";
 
-const TableUser = (props) => {
-    const [loading, setLoading] = useState(false)
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-    const rowSelection = {
-        type: 'checkbox',
-        selectedRowKeys,
-        onChange: (newSelectedRowKeys) => {
-            setSelectedRowKeys(newSelectedRowKeys);
-        }
-    };
-
-    const edit = () => {
-
-    }
-
-    const handleConfirmDelete = async (id) => {
-        setLoading(true)
-        const res = await userService.deleteUser(id)
-        if (!res.errorCode) {
-            toast.success('Xóa thành công!')
-            props.fetchUsers()
-        }
-        else {
-            toast.error(res.message)
-        }
-        setLoading(false)
-    }
+const TableUser = () => {
+    const { currentPage, data: users } = useSelector(state => state.user)
+    const dispatch = useDispatch()
 
     const columns = [
         {
@@ -43,57 +20,68 @@ const TableUser = (props) => {
             dataIndex: 'email',
         },
         {
-            title: 'Full name',
-            dataIndex: 'fullName',
-        },
-        {
             title: 'Enabled',
             dataIndex: 'enabled',
-            render: (value) => (
-                <Checkbox checked={value} ></Checkbox>
-            )
+            render: (text) => {
+                return (
+                    <Checkbox checked={Boolean(text) ? true : false}></Checkbox>
+                )
+            }
         },
         {
-            title: "Action",
-            dataIndex: "operation",
-            render: (_, record) => {
-                return (
-                    <div className="d-flex align-items-center gap-3">
+            title: 'Action',
+            dataIndex: 'action',
+            render: (_, record) => (
+                <>
+                    <Space size='large'>
+                        <Typography.Link>
+                            Edit
+                        </Typography.Link>
+                        <Popconfirm title="Sure to delete?"
+                            icon={
+                                <QuestionCircleOutlined
+                                    style={{
+                                        color: 'red',
+                                    }}
+                                />
+                            }
+                        >
+                            <Typography.Link type='danger'>Delete</Typography.Link>
+                        </Popconfirm>
                         <Typography.Link
-                            onClick={() => props.handleShowModalUserDetails(record.id)}
+                            type='warning'
+                            onClick={() => dispatch(fetchUserById(record.id))}
                         >
                             Details
                         </Typography.Link>
-                        <Typography.Link
-                            type="warning"
-                            onClick={() => edit(record)}
-                        >
-                            Edit
-                        </Typography.Link>
-                        <Typography.Link type="danger">
-                            <Popconfirm
-                                title="Sure to delete?"
-                                onConfirm={() => handleConfirmDelete(record.id)}
-                            >
-                                Delete
-                            </Popconfirm>
-                        </Typography.Link>
-                    </div>
-                )
-            },
-        },
+                    </Space>
+                </>
+            )
+        }
     ];
 
+    useEffect(() => {
+        dispatch(fetchUserWithPagination({ page: currentPage, size: USERS_MAX_ITEMS_PER_PAGE }))
+    }, [])
 
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+    const onSelectChange = (newSelectedRowKeys) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
     return (
-        <div>
-            <Table
-                loading={props.loading || loading ? true : false}
-                rowSelection={rowSelection} columns={columns} rowKey="id"
-                pagination={false} bordered dataSource={props.data}
-            />
-        </div>
-    )
-}
-
-export default TableUser
+        <Table
+            bordered
+            rowKey="id"
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={users}
+        />
+    );
+};
+export default TableUser;

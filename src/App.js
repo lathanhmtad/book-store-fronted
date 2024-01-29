@@ -1,76 +1,82 @@
+import { useEffect } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 
 // import layouts
-import Customer from './layouts/Customer';
-import Admin from './layouts/Admin'
+import CustomerLayout from './Layouts/CustomerLayout';
+import AdminLayout from './Layouts/AdminLayout';
 
 // import pages
-import Home from './pages/Home'
-import ProductDetail from './pages/ProductDetail'
-import Users from './pages/Admin/Users'
-import Products from './pages/Admin/Products';
-import Dashboard from './pages/Admin/Dashboard'
-import Roles from './pages/Admin/Roles'
-import Privileges from './pages/Admin/Privileges'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import PageNotFound from './pages/PageNotFound'
+import LoginPage from './Pages/Login/LoginPage';
+import RegisterPage from './Pages/Register/RegisterPage';
+import PageNotFound from './Pages/NotFound/PageNotFound'
+import DashboardPage from './Pages/Admin/Dashboard/DashboardPage'
 
 // import css
-import './css/Common.scss'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.scss'
 import 'react-toastify/dist/ReactToastify.css';
 
-const App = () => {
+
+import { ToastContainer } from 'react-toastify';
+import userService from './services/userService';
+import { doLogout, setUserInfo } from './redux/slices/authSlice';
+import PrivateRoute from './Pages/ProtectedRoute/PrivateRoute';
+import AuthPage from './Pages/Auth/AuthPage';
+import UserPage from './Pages/Admin/Users/UserPage';
+
+function App() {
+    const isDarkMode = useSelector(state => state.theme.isDarkMode)
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+    const dispatch = useDispatch()
+
+    const getCurrentUser = async () => {
+        const res = await userService.getCurrentUser()
+        if (res && res.id) {
+            dispatch(setUserInfo(res))
+        }
+        else {
+            dispatch(doLogout())
+        }
+    }
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            getCurrentUser()
+        }
+    }, [isAuthenticated])
+
     const router = createBrowserRouter([
         {
-            path: "/",
-            element: <Customer />,
-            children: [
-                {
-                    index: true,
-                    element: <Home />,
-                },
-                {
-                    path: "product/:id",
-                    element: <ProductDetail />,
-                },
-            ],
-        },
-        {
             path: "/admin",
-            element: <Admin />,
+            element: <PrivateRoute>
+                <AdminLayout />
+            </PrivateRoute>,
             children: [
                 {
                     index: true,
-                    element: <Dashboard />
+                    element: <DashboardPage />
                 },
                 {
                     path: 'users',
-                    element: <Users />
-                },
-                {
-                    path: 'roles',
-                    element: <Roles />
-                },
-                {
-                    path: 'products',
-                    element: <Products />
-                },
-                {
-                    path: 'privileges',
-                    element: <Privileges />
+                    element: <UserPage />
                 }
             ]
         },
         {
-            path: "/login",
-            element: <Login />,
+            path: "/",
+            element: <CustomerLayout />
+        },
+        {
+            path: '/login',
+            element: <LoginPage />
         },
         {
             path: '/register',
-            element: <Register />,
+            element: <RegisterPage />
+        },
+        {
+            path: '/auth',
+            element: <AuthPage />
         },
         {
             path: '*',
@@ -79,7 +85,7 @@ const App = () => {
     ]);
 
     return (
-        <>
+        <div>
             <RouterProvider router={router} />
 
             <ToastContainer
@@ -92,10 +98,11 @@ const App = () => {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme="light"
+                theme={isDarkMode ? 'dark' : 'light'}
             />
-        </>
+
+        </div>
     )
 }
 
-export default App
+export default App;
