@@ -10,8 +10,7 @@ import {
     Radio,
     Select,
     TreeSelect,
-    Typography,
-    Upload,
+    Typography, Upload,
 } from 'antd'
 
 import _ from 'lodash'
@@ -81,7 +80,7 @@ const FormCategory = () => {
     )
 
     const onFinish = (values) => {
-        
+
     }
 
     return (
