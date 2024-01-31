@@ -12,13 +12,13 @@ import userService from '../../services/userService'
 
 import { loginSuccess } from "../../redux/slices/authSlice"
 
-const { Title } = Typography
+const { Title } = Typography 
 
 export default function SignIn() {
     const [isLoading, setIsLoading] = useState(false)
     const [form] = Form.useForm()
-    const dispatch = useDispatch()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const onFinish = async (values) => {
         toast.dismiss()
