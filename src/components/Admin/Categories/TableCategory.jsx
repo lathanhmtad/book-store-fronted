@@ -5,12 +5,13 @@ import { Checkbox, Space, Table, Typography, Popconfirm } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 
 import { fetchUserById, fetchUserWithPagination, updateUser } from '../../../redux/slices/users/userThunk'
-import { setCurrentPage } from '../../../redux/slices/users/userSlice'
+import { setCurrentPage } from '../../../redux/slices/categories/categorySlice'
 
-import { USERS_MAX_ITEMS_PER_PAGE } from '../../../utils/appConstant'
+import { CATEGORIES_MAX_ITEMS_PER_PAGE } from '../../../utils/appConstant'
+import { fetchCategories } from '../../../redux/slices/categories/categoryThunk'
 
-const TableUser = () => {
-    const { currentPage, users, totalElements } = useSelector(state => state.user)
+const TableCategory = () => {
+    const { currentPage, categories, totalElements } = useSelector(state => state.category)
     const dispatch = useDispatch()
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([])
@@ -21,12 +22,8 @@ const TableUser = () => {
             dataIndex: 'id',
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-        },
-        {
-            title: 'Full name',
-            dataIndex: 'fullName'
+            title: 'Name',
+            dataIndex: 'name',
         },
         {
             title: 'Enabled',
@@ -70,9 +67,8 @@ const TableUser = () => {
     ]
 
     useEffect(() => {
-        dispatch(fetchUserWithPagination({ page: currentPage, size: USERS_MAX_ITEMS_PER_PAGE }))
+        dispatch(fetchCategories({ page: currentPage, size: CATEGORIES_MAX_ITEMS_PER_PAGE }))
     }, [currentPage])
-
 
     const rowSelection = {
         selectedRowKeys,
@@ -88,12 +84,12 @@ const TableUser = () => {
             bordered
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={users}
+            dataSource={categories}
             pagination={
                 {
                     current: currentPage,
                     total: totalElements,
-                    pageSize: USERS_MAX_ITEMS_PER_PAGE,
+                    pageSize: CATEGORIES_MAX_ITEMS_PER_PAGE,
                     onChange: page => {
                         dispatch(setCurrentPage(page))
                     }
@@ -102,4 +98,4 @@ const TableUser = () => {
         />
     )
 }
-export default TableUser
+export default TableCategory

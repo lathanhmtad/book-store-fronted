@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import { Button, Flex, Space, Typography, Divider } from "antd"
 import { PlusCircleOutlined } from '@ant-design/icons'
 
 // import components
-import ModalUser from "../../../Components/Admin/Users/ModalUser";
-import TableUser from "../../../Components/Admin/Users/TableUser";
+import ModalCategory from "../../../Components/Admin/Categories/ModalCategory";
+import TableCategory from "../../../Components/Admin/Categories/TableCategory";
 import DrawerDetailsUser from "../../../Components/Admin/Users/DrawerDetailsUser";
 
+import { setOpenModal } from "../../../redux/slices/categories/categorySlice";
 
-const RolePage = () => {
-    const [modalOpen, setModalOpen] = useState(false);
+const CategoryPage = () => {
+    const dispatch = useDispatch()
 
     return (
         <div>
@@ -18,33 +20,28 @@ const RolePage = () => {
                     direction="vertical"
                     size="small"
                 >
-                    <Typography.Title style={{ marginBottom: 0 }} level={2}>Users</Typography.Title>
-                    <Typography.Title level={5}>Users management</Typography.Title>
+                    <Typography.Title style={{ marginBottom: 0 }} level={2}>Categories</Typography.Title>
+                    <Typography.Title level={5}>Categories management</Typography.Title>
                 </Space>
                 <div>
                     <Button
                         type="primary"
                         icon={<PlusCircleOutlined />}
-                        onClick={() => setModalOpen(true)}
+                        onClick={() => dispatch(setOpenModal(true))}
                         size="large">
-                        Add user
+                        Add category
                     </Button>
                 </div>
             </Flex>
             <Divider />
 
-            <TableUser />
+            <TableCategory />
 
             <DrawerDetailsUser />
 
-            <ModalUser
-                setShow={setModalOpen}
-                show={modalOpen}
-            />
-
-
+            <ModalCategory />
         </div>
     )
 }
 
-export default RolePage
+export default CategoryPage

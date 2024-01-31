@@ -6,28 +6,27 @@ import { Modal, Divider, Typography } from 'antd';
 
 import _ from 'lodash'
 
-import { resetIsCreateUserSuccess, setOpenModal } from '../../../redux/slices/users/userSlice';
+import { setOpenModal } from '../../../redux/slices/categories/categorySlice';
 
-import FormUser from './FormUser';
+import FormCategory from './FormCategory';
 
-const ModalUser = () => {
-    const { loading,
-        isCreateUserSuccess,
+const ModalCategory = () => {
+    const {
+        loading,
         openModal: show,
-        userDetailsWithId: editableUser
-    } = useSelector(state => state.user)
+    } = useSelector(state => state.category)
 
     const [modal, contextHolder] = Modal.useModal();
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (isCreateUserSuccess) {
-            toast.success('Create user success!')
-            dispatch(setOpenModal(false))
-            dispatch(resetIsCreateUserSuccess())
-        }
-    }, [isCreateUserSuccess])
+    // useEffect(() => {
+    //     if (isCreateUserSuccess) {
+    //         toast.success('Create user success!')
+    //         dispatch(setOpenModal(false))
+    //         dispatch(resetIsCreateUserSuccess())
+    //     }
+    // }, [isCreateUserSuccess])
 
     const showCloseConfirmation = () => {
         modal.confirm({
@@ -43,7 +42,8 @@ const ModalUser = () => {
     return (
         <Modal
             width={1000}
-            title={<Typography.Title level={4}>{_.isEmpty(editableUser) ? 'Add user' : 'Edit user'}</Typography.Title>}
+            // title={<Typography.Title level={4}>{_.isEmpty(editableUser) ? 'Add user' : 'Edit user'}</Typography.Title>}
+            title={<Typography.Title level={4}>Add category</Typography.Title>}
             centered={true}
             closeIcon={true}
             open={show}
@@ -54,8 +54,8 @@ const ModalUser = () => {
             {contextHolder}
             <Divider />
 
-            <FormUser />
+            <FormCategory />
         </Modal>
     );
 };
-export default ModalUser;
+export default ModalCategory;

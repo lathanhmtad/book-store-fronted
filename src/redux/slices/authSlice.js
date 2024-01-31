@@ -1,29 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
+    loading: false,
     isAuthenticated: false,
-    isLogout: true,
     userToken: '', // for storing the jwt
-    userInfo: {} // for storing the user info
+    userInfo: {},
 }
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        setLoading(state, action) {
+            state.loading = action.loading
+        },
         loginSuccess(state, action) {
             state.isAuthenticated = true
-            state.userToken = action.payload
-            state.isLogout = false
+            state.userToken = action.payload.accessToken
         },
         setUserInfo(state, action) {
             state.userInfo = action.payload
         },
         doLogout(state) {
-            state.isLogout = true
             state.isAuthenticated = false
             state.userToken = ''
-            state.userInfo = {}
+            state.username = ''
         },
         updateAccessToken(state, action) {
             state.userToken = action.payload
@@ -31,7 +32,6 @@ export const authSlice = createSlice({
     },
 })
 
-// Action creators are generated for each case reducer function
-export const { loginSuccess, doLogout, setUserInfo, updateAccessToken } = authSlice.actions
+export const { loginSuccess, doLogout, setUserInfo, updateAccessToken, setLoading } = authSlice.actions
 
 export default authSlice.reducer

@@ -1,6 +1,5 @@
-import axios from "axios";
-import { doLogout, updateAccessToken } from "../redux/slices/authSlice";
-import { toast } from "react-toastify";
+import axios from "axios"
+import { doLogout, updateAccessToken } from "../redux/slices/authSlice"
 
 let store
 
@@ -11,23 +10,23 @@ export const injectStore = _store => {
 const instance = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
     withCredentials: true,
-});
+})
 
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     // Do something before request is sent
     config.headers.Authorization = `Bearer ${store.getState().auth.userToken}`
-    return config;
+    return config
 }, function (error) {
     // Do something with request error
-    return Promise.reject(error);
-});
+    return Promise.reject(error)
+})
 
 // Add a response interceptor
 instance.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response.data;
+    return response.data
 }, async function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
@@ -44,18 +43,15 @@ instance.interceptors.response.use(function (response) {
         return instance.request(originalRequest)
     }
 
+    // if refresh token has expired
     if (error.response && error.response.status === 403 && error.config.url === '/api/v1/auth/refresh-token') {
-        toast.error('Please login again to use the application!', {
-            toastId: 2,
-            autoClose: 7000
-        })
         store.dispatch(doLogout())
     }
 
     if (error.response) {
         return error.response.data
     }
-    return error;
-});
+    return Promise.reject(error)
+})
 
 export default instance

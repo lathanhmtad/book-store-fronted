@@ -22,7 +22,6 @@ const AdminHeader = (props) => {
     const isDarkMode = useSelector(state => state.theme.isDarkMode)
     const currentUser = useSelector(state => state.auth.userInfo)
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
     const items = [
         {
@@ -103,7 +102,7 @@ const AdminHeader = (props) => {
                     >
                         <Typography.Link>
                             <Space>
-                                <Avatar src={<img src={currentUser.photo} alt="avatar" />} />
+                                <Avatar src={<img loading='lazy' src={currentUser.photo} alt="avatar" />} />
                                 {currentUser.fullName}
                                 <DownOutlined />
                             </Space>

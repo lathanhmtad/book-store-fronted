@@ -5,6 +5,18 @@ class UserService {
         return axios.post('/api/v1/auth/login', { email, password })
     }
 
+    getCurrentUser() {
+        return axios.get('/api/v1/users/current')
+    }
+
+    getUsersWithPagination(page, limit) {
+        return axios.get(`/api/v1/users?page=${page}&limit=${limit}`)
+    }
+
+    getUserById(userId) {
+        return axios.get(`/api/v1/users/${userId}`)
+    }
+
     createNewUser(formData) {
         return axios({
             method: 'post',
@@ -14,10 +26,6 @@ class UserService {
                 'Content-Type': 'multipart/form-data'
             },
         })
-    }
-
-    getUsersWithPagination(page, limit) {
-        return axios.get(`/api/v1/users?page=${page}&limit=${limit}`)
     }
 
     deleteUser(id) {

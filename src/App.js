@@ -1,42 +1,38 @@
 import { useEffect } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 
 // import layouts
 import CustomerLayout from './Layouts/CustomerLayout';
 import AdminLayout from './Layouts/AdminLayout';
 
 // import pages
-import LoginPage from './Pages/Login/LoginPage';
-import RegisterPage from './Pages/Register/RegisterPage';
 import PageNotFound from './Pages/NotFound/PageNotFound'
 import DashboardPage from './Pages/Admin/Dashboard/DashboardPage'
+import AuthPage from './Pages/Auth/AuthPage';
+import UserPage from './Pages/Admin/User/UserPage';
+import PrivateRoute from './Pages/ProtectedRoute/PrivateRoute';
 
 // import css
 import './App.scss'
 import 'react-toastify/dist/ReactToastify.css';
 
-
-import { ToastContainer } from 'react-toastify';
 import userService from './services/userService';
-import { doLogout, setUserInfo } from './redux/slices/authSlice';
-import PrivateRoute from './Pages/ProtectedRoute/PrivateRoute';
-import AuthPage from './Pages/Auth/AuthPage';
-import UserPage from './Pages/Admin/Users/UserPage';
 
-function App() {
+import { setLoading, setUserInfo } from './redux/slices/authSlice';
+import CategoryPage from './Pages/Admin/Category/CategoryPage';
+
+const App = () => {
+    const dispatch = useDispatch()
     const isDarkMode = useSelector(state => state.theme.isDarkMode)
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-    const dispatch = useDispatch()
 
     const getCurrentUser = async () => {
+        dispatch(setLoading(true))
         const res = await userService.getCurrentUser()
-        if (res && res.id) {
-            dispatch(setUserInfo(res))
-        }
-        else {
-            dispatch(doLogout())
-        }
+        dispatch(setUserInfo(res))
+        dispatch(setLoading(false))
     }
 
     useEffect(() => {
@@ -59,20 +55,16 @@ function App() {
                 {
                     path: 'users',
                     element: <UserPage />
+                },
+                {
+                    path: 'categories',
+                    element: <CategoryPage />
                 }
             ]
         },
         {
             path: "/",
             element: <CustomerLayout />
-        },
-        {
-            path: '/login',
-            element: <LoginPage />
-        },
-        {
-            path: '/register',
-            element: <RegisterPage />
         },
         {
             path: '/auth',

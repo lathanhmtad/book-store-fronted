@@ -1,14 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { fetchUserWithPagination, fetchUserById, createNewUser } from './userThunk'
+import { fetchUserWithPagination, fetchUserById, createNewUser, updateUser } from './userThunk'
 
 const initialState = {
     loading: false,
-    data: [],
+
+    users: [],
     totalElements: 0,
     totalPages: 1,
     currentPage: 1,
+
+    openModal: false,
+
     isCreateUserSuccess: false,
+
     showDrawerDetails: false,
     userDetailsWithId: {}
 }
@@ -19,20 +24,29 @@ export const userSlice = createSlice({
     reducers: {
         closeDrawerDetails: (state) => {
             state.showDrawerDetails = false
+            state.userDetailsWithId = {}
         },
         resetIsCreateUserSuccess: (state) => {
             state.isCreateUserSuccess = false
+        },
+        setCurrentPage: (state, action) => {
+            state.currentPage = action.payload
+        },
+        setOpenModal: (state, action) => {
+            if(action.payload) {
+                state.userDetailsWithId = {}
+            } 
+            state.openModal = action.payload
         }
     },
     extraReducers: (builder) => {
-        // Add reducers for additional action types here, and handle loading state as needed
         builder
             // fetch users with pagination
             .addCase(fetchUserWithPagination.pending, (state) => {
                 state.loading = true
             })
             .addCase(fetchUserWithPagination.fulfilled, (state, action) => {
-                state.data = action.payload.data
+                state.users = action.payload.data
                 state.totalPages = action.payload.totalPages
                 state.totalElements = action.payload.totalElements
                 state.loading = false
@@ -65,10 +79,22 @@ export const userSlice = createSlice({
             .addCase(createNewUser.rejected, (state) => {
                 state.loading = false
             })
+
+            // update user
+            .addCase(updateUser.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.openModal = true
+                state.userDetailsWithId = action.payload
+                state.loading = false
+            })
+            .addCase(updateUser.rejected, (state) => {
+                state.loading = false
+            })
     },
 })
 
-// Action creators are generated for each case reducer function
-export const { closeDrawerDetails, resetIsCreateUserSuccess } = userSlice.actions
+export const { closeDrawerDetails, resetIsCreateUserSuccess, setCurrentPage, setOpenModal } = userSlice.actions
 
 export default userSlice.reducer

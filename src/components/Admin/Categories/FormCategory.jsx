@@ -9,15 +9,14 @@ import {
     Modal,
     Radio,
     Select,
+    TreeSelect,
     Typography,
     Upload,
 } from 'antd'
 
-import { createNewUser } from '../../../redux/slices/users/userThunk'
-import { fetchRoles } from '../../../services/roleService'
-
 import _ from 'lodash'
-import { fetchRoleOptions } from '../../../redux/slices/roleSlice'
+
+import { fetchCategoriesTree } from '../../../redux/slices/categories/categoryThunk'
 
 const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -28,28 +27,18 @@ const getBase64 = (file) =>
     })
 
 
-const FormUser = () => {
+const FormCategory = () => {
     const [previewImage, setPreviewImage] = useState('')
     const [previewTitle, setPreviewTitle] = useState('')
     const [previewOpen, setPreviewOpen] = useState(false)
     const [uploadedImage, setUploadedImage] = useState([])
 
-    const editableUser = useSelector(state => state.user.userDetailsWithId)
-    const roleOptions = useSelector(state => state.role.roleOptions)
+    const treeCategories = useSelector(state => state.category.treeSelect)
+
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(fetchRoleOptions())
-        if (!_.isEmpty(editableUser)) {
-            setUploadedImage([
-                {
-                    uid: '-1',
-                    name: 'image.png',
-                    status: 'done',
-                    url: editableUser.photo,
-                }
-            ])
-        }
+        dispatch(fetchCategoriesTree())
     }, [])
 
     const fileProps = {
@@ -92,19 +81,7 @@ const FormUser = () => {
     )
 
     const onFinish = (values) => {
-
-        const formData = new FormData()
-
-        for (const [key, value] of Object.entries(values)) {
-            if (key === 'image') {
-                formData.append(key, value.file)
-            }
-            else {
-                formData.append(key, value)
-            }
-        }
-
-        dispatch(createNewUser(formData))
+        
     }
 
     return (
@@ -121,78 +98,53 @@ const FormUser = () => {
                 layout="horizontal"
                 onFinish={onFinish}
                 autoComplete='off'
-                initialValues={
-                    {
-                        email: editableUser.email,
-                        fullName: editableUser.fullName,
-                        roleIds: editableUser.roles?.map(item => item.id)
-                    }
-                }
             >
                 <Form.Item
-                    label="Email"
-                    name="email"
+                    label="Name"
+                    name="name"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your email!',
+                            message: 'Please input your name!',
                         },
-                        {
-                            type: 'email',
-                            message: 'Email invalid!'
-                        }
                     ]}
                     validateDebounce={700}
                 >
                     <Input />
                 </Form.Item>
+
                 <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: _.isEmpty(editableUser) ? true : false,
-                            message: 'Please input your password!',
-                        },
-                    ]}
-                >
-                    <Input.Password
-                        placeholder={!_.isEmpty(editableUser) ? "If you don't need it, skip it" : ''}
-                    />
-                </Form.Item>
-                <Form.Item
-                    label="Full name"
-                    name="fullName"
+                    label="Select parent"
+                    name="parentId"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your full name!',
+                            message: 'Please select!',
                         },
                     ]}
                 >
-                    <Input />
-                </Form.Item>
-                <Form.Item label="Select roles"
-                    name="roleIds"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please select roles!',
-                        }
-                    ]}
-                >
-                    <Select
-                        allowClear
-                        mode="multiple"
+                    <TreeSelect
+                        size='large'
+                        showSearch
                         style={{
                             width: '100%',
                         }}
-                        placeholder="Please select roles"
-                        options={roleOptions}
-                        filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                        dropdownStyle={{ zIndex: 1000000000000 }}
-                    ></Select>
+                        dropdownStyle={{
+                            maxHeight: 400,
+                            overflow: 'auto',
+                        }}
+                        placeholder="Please select parent"
+                        allowClear
+                        treeData={treeCategories ? [
+                            {
+                                title: 'No parent',
+                                value: 0
+                            },
+                            ...treeCategories,
+                        ] : []}
+                    />
                 </Form.Item>
+
                 <Form.Item
                     label="Upload"
                     name="image"
@@ -206,7 +158,7 @@ const FormUser = () => {
                 <Form.Item
                     label="Status"
                     name="enabled"
-                    initialValue={!_.isEmpty(editableUser) ? `${editableUser.enabled}` : "true"}
+                    initialValue="true"
                 >
                     <Radio.Group>
                         <Radio value="true">Enabled</Radio>
@@ -241,4 +193,4 @@ const FormUser = () => {
         </>
     )
 }
-export default FormUser
+export default FormCategory
